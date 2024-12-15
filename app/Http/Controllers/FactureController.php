@@ -67,38 +67,30 @@ class FactureController extends Controller
 
     public function store(Request $request, $clientId)
     {
-        // Retrieve the client by ID
         $client = Client::findOrFail($clientId);
 
         try {
-            // Validate the incoming request data
             $validated = $request->validate([
                 'amount' => 'required|numeric|gt:0',
                 'due_date' => 'required|date',
                 'status' => ['required', 'string', Rule::enum(StatusEnum::class)],
             ]);
 
-            // Create the facture using the relationship
+
             $facture = $client->factures()->create($validated);
 
-            // Return success response if facture is created
+
             return response()->json([
                 'success' => true,
                 'message' => 'Facture ajoutée avec succès!',
                 'data' => $facture,
             ], 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Return validation errors if validation fails
+
             return response()->json([
                 'success' => false,
                 'errors' => $e->errors(),
             ], 422);
-        } catch (\Exception $e) {
-            // Handle unexpected exceptions
-            return response()->json([
-                'success' => false,
-                'message' => 'Une erreur est survenue lors de l\'ajout de la facture.',
-            ], 500);
         }
     }
 

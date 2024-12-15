@@ -1,17 +1,15 @@
-<div class="container mt-5">
-    <!-- Title Section -->
+<div class="container mt-5" style="padding-bottom: 50px">
+
     <div class="mb-4">
         <h1 class="text-center text-primary mb-3">Factures Impayées en Retard</h1>
         <h4 class="text-center text-muted">Client: <strong>{{ $client->name }}</strong></h4>
     </div>
-
-    <!-- Total Unpaid Amount Section -->
+ 
     <div class="mb-4 p-3 border rounded shadow-sm">
         <h3 class="text-success">Montant Total des Factures Impayées:</h3>
         <p class="fs-4 fw-bold">{{ number_format($totalUnpaid, 0) }} TND</p>
     </div>
 
-    <!-- Overdue Invoices Table Section -->
     <div class="mb-5">
         <h3 class="text-danger mb-3">Liste des Factures Impayées en Retard</h3>
         <table class="table table-striped table-bordered">
@@ -45,9 +43,3 @@
     </div>
 </div>
 
-<!-- Add spacing below the table to avoid overlap with other content -->
-<style>
-    .container {
-        padding-bottom: 50px;
-    }
-</style>

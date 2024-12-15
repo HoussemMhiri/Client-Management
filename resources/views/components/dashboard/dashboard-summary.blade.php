@@ -1,5 +1,5 @@
 <div class="row">
-    <!-- Total Clients Card -->
+
     <div class="col-md-4 mb-4">
         <div class="card border-0 shadow-sm">
             <div class="card-body">
@@ -16,7 +16,6 @@
         </div>
     </div>
 
-    <!-- Total Invoices Card -->
     <div class="col-md-4 mb-4">
         <div class="card border-0 shadow-sm">
             <div class="card-body">
@@ -33,7 +32,6 @@
         </div>
     </div>
 
-    <!-- Unpaid Invoices Card -->
     <div class="col-md-4 mb-4">
         <div class="card border-0 shadow-sm">
             <div class="card-body">

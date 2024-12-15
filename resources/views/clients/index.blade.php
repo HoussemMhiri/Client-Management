@@ -1,6 +1,4 @@
-
 @extends('layouts.app')
-
 
 @section('content')
     <div class="container">
@@ -27,8 +25,6 @@
         </table>
     </div>
 
-
-
     <x-client-modal />
 
     <x-delete-modal/>
@@ -43,6 +39,29 @@
 
 
     $(document).ready(function() {
+        
+        function handleAjaxValidationErrors(xhr, fieldSelectors) {
+   
+    let response = xhr.responseJSON;
+
+    if (response && response.errors) {
+        
+        Object.keys(fieldSelectors).forEach(function (field) {
+            const selector = fieldSelectors[field]; 
+
+            if (response.errors[field]) {
+                $(selector.input).addClass('is-invalid');
+                $(selector.feedback).text(response.errors[field]);
+            } else {
+                $(selector.input).removeClass('is-invalid');
+                $(selector.feedback).text('');
+            }
+        });
+    } else {
+        alert('An unexpected error occurred: ' + xhr.statusText);
+    }
+}
+
         let table = $('.datatable').DataTable({
             serverSide: true,
             processing: true,
@@ -80,55 +99,44 @@
     });
     
     
-    // Form submission with AJAX for both editing and adding
+    //Edit
     $('#editClientForm').on('submit', function (e) {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault(); 
     
-        let formData = $(this).serialize(); // Serialize the form data
+        let formData = $(this).serialize();
     
-        // Clear errors
         $('#editEmail-error').text('');
         $('#editPhone-error').text('');
         $('#editEmail').removeClass('is-invalid');
-        $('#editPhone').removeClass('is-invalid');
+        $('#editPhone').removeClass('is-invalid'); 
     
         $.ajax({
-            url: $(this).attr('action'), // Get the action URL from the form
-            method: 'POST', // Always use POST as the form method (PUT is simulated via _method)
+            url: $(this).attr('action'), 
+            method: 'POST', 
             data: formData,
-            success: function (response) {
+            success: function (response) { 
                 if (response.success) {
-                    // Close the modal
                     $('#editClientModal').modal('hide');
-    
-                    // Reset the form
                     $('#editClientForm')[0].reset();
                     table.ajax.reload(null, false);
-                } else if (response.errors) {
-                    // Show validation errors
-                    if (response.errors.email) {
-                        $('#editEmail').addClass('is-invalid');
-                        $('#editEmail-error').text(response.errors.email);
-                    }
-                    if (response.errors.phone) {
-                        $('#editPhone').addClass('is-invalid');
-                        $('#editPhone-error').text(response.errors.phone);
-                    }
                 }
             },
             error: function (xhr, status, error) {
-                alert('An error occurred: ' + error);
+            handleAjaxValidationErrors(xhr, {
+            email: { input: '#editEmail', feedback: '.invalid-feedback-email' },
+            phone: { input: '#editPhone', feedback: '.invalid-feedback-phone' },
+            name: { input: '#editName', feedback: '.invalid-feedback-name' }
+                });
             }
         });
     });
     
-        // Form submission with AJAX
+        // ADD
         $('#addClientForm').on('submit', function(e) {
-            e.preventDefault(); // Prevent default form submission
+            e.preventDefault(); 
     
-            let formData = $(this).serialize(); // Serialize form data
-    
-            // Clear errors
+            let formData = $(this).serialize(); 
+
             $('#email-error').text('');
             $('#phone-error').text('');
             $('#email').removeClass('is-invalid');
@@ -140,49 +148,41 @@
                 data: formData,
                 success: function(response) {
                     if (response.success) {
-                        $('#addClientModal').modal('hide'); // Hide the modal
-                        $('#addClientForm')[0].reset(); // Reset the form
-                        table.ajax.reload(null, false); // Reload DataTable without resetting pagination
-                    } else if (response.errors) {
-                        if (response.errors.email) {
-                            $('#email').addClass('is-invalid');
-                            $('#email-error').text(response.errors.email);
-                        }
-                        if (response.errors.phone) {
-                            $('#phone').addClass('is-invalid');
-                            $('#phone-error').text(response.errors.phone);
-                        }
-                    }
+                        $('#addClientModal').modal('hide'); 
+                        $('#addClientForm')[0].reset(); 
+                        table.ajax.reload(null, false); 
+                    } 
                 },
-                error: function(xhr, status, error) {
-                    alert('An error occurred: ' + error);
-                }
+                error: function (xhr, status, error) {
+            handleAjaxValidationErrors(xhr, {
+            email: { input: '#email', feedback: '.invalid-feedback-email' },
+            phone: { input: '#phone', feedback: '.invalid-feedback-phone' },
+            name: { input: '#name', feedback: '.invalid-feedback-name' }
+                });
+            }       
             });
         });
     
         let clientIdToDelete = null;
     
-    // Open the modal and store client ID
     $('#confirmDeleteModal').on('show.bs.modal', function (event) {
-        let button = $(event.relatedTarget); // Button that triggered the modal
-        clientIdToDelete = button.data('id'); // Extract client ID from data-id attribute
+        let button = $(event.relatedTarget); 
+        clientIdToDelete = button.data('id'); 
     });
     
-    // Handle delete confirmation
+
     $('#confirmDeleteBtn').on('click', function () {
-        // Send AJAX request to delete client
+       
         $.ajax({
-            url: '/clients/destroy/' + clientIdToDelete, // Adjust the URL to your route
+            url: '/clients/destroy/' + clientIdToDelete, 
             method: 'DELETE',
             data: {
-                _token: '{{ csrf_token() }}', // CSRF token for security
+                _token: '{{ csrf_token() }}', 
             },
             success: function (response) {
-                // Close the modal
                 $('#confirmDeleteModal').modal('hide');
     
-                // Reload the DataTable to reflect the change
-                table.ajax.reload(null, false); // This assumes your DataTable instance is stored in `table`
+                table.ajax.reload(null, false); 
     
             },
             error: function (xhr, status, error) {

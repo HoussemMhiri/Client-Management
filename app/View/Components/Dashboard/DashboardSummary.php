@@ -4,8 +4,6 @@ namespace App\View\Components\Dashboard;
 
 use App\Models\Client;
 use App\Models\Facture;
-use Closure;
-use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
 class DashboardSummary extends Component

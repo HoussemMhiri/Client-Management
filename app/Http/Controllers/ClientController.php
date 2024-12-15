@@ -83,7 +83,7 @@ class ClientController extends Controller
                 'max:255',
                 Rule::unique('clients')->ignore($client->id)
             ],
-            'phone' => 'required|string|max:20',
+            'phone' => 'required|string|max:14',
         ]);
 
         $client->update($validated);

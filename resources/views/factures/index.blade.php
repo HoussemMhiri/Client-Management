@@ -55,8 +55,30 @@
 <script type="text/javascript">
 
 
-    $(document).ready(function() {
+$(document).ready(function() {
+ 
+    function handleAjaxValidationErrors(xhr, fieldSelectors) {   
+   let response = xhr.responseJSON;
+
+   if (response && response.errors) {
+       
+       Object.keys(fieldSelectors).forEach(function (field) {
+           const selector = fieldSelectors[field]; 
+
+           if (response.errors[field]) {
+               $(selector.input).addClass('is-invalid');
+               $(selector.feedback).text(response.errors[field]);
+           } else {
+               $(selector.input).removeClass('is-invalid');
+               $(selector.feedback).text('');
+           }
+       });
+   } else {
+       alert('An unexpected error occurred: ' + xhr.statusText);
+   }
+}
         let clientId = {{ $client_id }}; 
+
         let table = $('.datatable').DataTable({
            
             serverSide: true,
@@ -76,8 +98,6 @@
             ],
         });
     
-  // get date or edit champs
-
   $('#editFactureModal').on('show.bs.modal', function (e) {
         let button = $(e.relatedTarget); 
         let factureId = button.data('id'); 
@@ -89,7 +109,6 @@
      
             let date = new Date(factureDue_date);
 
-// Get the local date using the toLocaleDateString method (without changing the day)
 let formattedDate = date.toLocaleDateString('en-CA'); 
             $('#editFactureId').val(factureId); 
             $('#editAmount').val(factureAmount); 
@@ -106,7 +125,7 @@ let formattedDate = date.toLocaleDateString('en-CA');
     $('#editFactureForm').on('submit', function (e) {
         e.preventDefault(); 
     
-        let formData = $(this).serialize(); // Serialize the form data
+        let formData = $(this).serialize(); 
     
        
         $('#editAmount-error').text('');
@@ -120,26 +139,18 @@ let formattedDate = date.toLocaleDateString('en-CA');
             data: formData,
             success: function (response) {
                 if (response.success) {
-                    // Close the modal
                     $('#editFactureModal').modal('hide');
     
-                    // Reset the form
                     $('#editFactureForm')[0].reset();
                     table.ajax.reload(null, false);
-                } else if (response.errors) {
-                    // Show validation errors
-                    if (response.errors.amount) {
-                        $('#editAmount').addClass('is-invalid');
-                        $('#editAmount-error').text(response.errors.amount);
-                    }
-                    if (response.errors.DueDate) {
-                        $('#editDueDate').addClass('is-invalid');
-                        $('#editDueDate-error').text(response.errors.DueDate);
-                    }
                 }
             },
             error: function (xhr, status, error) {
-                alert('An error occurred: ' + error);
+            handleAjaxValidationErrors(xhr, {
+            email: { input: '#editAmount', feedback: '.invalid-feedback-amount' },
+            phone: { input: '#editDueDate', feedback: '.invalid-feedback-date' },
+            name: { input: '#editStatus', feedback: '.invalid-feedback-status' }
+                });
             }
         });
     });
@@ -150,11 +161,8 @@ let formattedDate = date.toLocaleDateString('en-CA');
     $('#addFactureForm').on('submit', function(e) {
     e.preventDefault(); 
 
-   
-    let clientId = $('#addFactureModal').data('id'); 
-    
-  
-    let formData = $(this).serialize(); // Serialize form data, including the client_id
+    let clientId = $('#addFactureModal').data('id');     
+    let formData = $(this).serialize(); 
 
     $.ajax({
         url: '{{ url('factures') }}/' + clientId + '/store', 
@@ -165,25 +173,15 @@ let formattedDate = date.toLocaleDateString('en-CA');
                 $('#addFactureModal').modal('hide'); 
                 $('#addFactureForm')[0].reset(); 
                 table.ajax.reload(null, false); 
-            } else if (response.errors) {
-               
-                if (response.errors.amount) {
-                    $('#amount').addClass('is-invalid');
-                    $('#amount-error').text(response.errors.amount[0]);
-                }
-                if (response.errors.due_date) {
-                    $('#due_date').addClass('is-invalid');
-                    $('#due_date-error').text(response.errors.due_date[0]);
-                }
-                if (response.errors.status) {
-                    $('#status').addClass('is-invalid');
-                    $('#status-error').text(response.errors.status[0]);
-                }
             }
         },
-        error: function(xhr, status, error) {
-            alert('An unexpected error occurred: ' + error.message);
-        }
+        error: function (xhr, status, error) {
+            handleAjaxValidationErrors(xhr, {
+            email: { input: '#amount', feedback: '.invalid-feedback-amount' },
+            phone: { input: '#due_date', feedback: '.invalid-feedback-date' },
+            name: { input: '#status', feedback: '.invalid-feedback-status' }
+                });
+            }
     });
 });
 

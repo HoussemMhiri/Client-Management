@@ -1,4 +1,3 @@
-
 @php
     use App\Enums\StatusEnum;
 @endphp
@@ -17,12 +16,12 @@
                     <div class="mb-3">
                         <label for="amount" class="form-label">Montant</label>
                         <input type="number" class="form-control" id="amount" name="amount" required min="1" step="1">
-                        <div id="amount-error" class="invalid-feedback"></div>
+                        <div id="amount-error" class="invalid-feedback-amount" style="color: red"></div>
                     </div>
                     <div class="mb-3">
                         <label for="due_date" class="form-label">Date d'échéance</label>
                         <input type="date" class="form-control" id="due_date" name="due_date" required>
-                        <div id="due_date-error" class="invalid-feedback"></div>
+                        <div id="due_date-error" class="invalid-feedback-date" style="color: red"></div>
                     </div>
                     <div class="mb-3">
                         <label for="status" class="form-label">Statut</label>
@@ -31,7 +30,7 @@
                                 <option value="{{ $status }}">{{ $status }}</option>
                             @endforeach
                         </select>
-                        <div id="status-error" class="invalid-feedback"></div>
+                        <div id="status-error" class="invalid-feedback-status" style="color: red"></div>
                     </div>
                     <button type="submit" class="btn btn-primary">Ajouter Facture</button>
                 </form>

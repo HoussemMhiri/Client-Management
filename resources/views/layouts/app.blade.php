@@ -6,9 +6,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dashboard</title>
 
-  <!-- Bootstrap CSS -->
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- DataTables CSS -->
+
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -28,7 +28,7 @@
         margin: 0;
     }
 
-    /* Navbar Styles */
+   
     .navbar {
         background-color: white;
         border-bottom: 1px solid #e2e8f0;
@@ -51,7 +51,7 @@
         color: var(--primary-color) !important;
     }
 
-    /* Sidebar Styles */
+
     .sidebar {
         position: fixed;
         top: 70px;
@@ -61,7 +61,7 @@
         background: white;
         border-right: 1px solid #e2e8f0;
         padding: 2rem 1.5rem;
-        overflow-y: auto; /* Enables scrolling if content overflows */
+        overflow-y: auto;
     }
 
     .sidebar h4 {
@@ -101,12 +101,10 @@
         color: white !important;
     }
 
-    /* Main Content */
     .main-content {
         margin-left: var(--sidebar-width);
-        margin-top: 70px; /* Prevent overlap with navbar */
+        margin-top: 70px; 
         padding: 2rem;
-      /*   text-align: center; */ /* Center-align content */
         width: calc(100% - var(--sidebar-width));
     }
 
@@ -120,7 +118,6 @@
         color: #64748b;
     }
 
-    /* Custom Button */
     .btn-primary {
         background-color: var(--primary-color);
         border: none;
@@ -135,7 +132,6 @@
         transform: translateY(-1px);
     }
 
-    /* Responsive Design */
     @media (max-width: 992px) {
         .sidebar {
             width: 100%;
@@ -150,7 +146,7 @@
     }
 </style>
 
-<!-- HTML Structure -->
+
 <nav class="navbar navbar-expand-lg shadow-sm">
     <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="#">
@@ -200,7 +196,6 @@
         </ul>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
         @if (request()->is('/'))
         <div style="text-align: center">
@@ -208,8 +203,6 @@
             <p class="lead">Welcome to the administrative dashboard. Manage your clients, invoices, and settings here.</p>
         </div>
           
-
-            <!-- Display the Dashboard Summary Component -->
             <x-dashboard.dashboard-summary />
         @else
             @yield('content')
@@ -220,7 +213,6 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
-<!-- Bootstrap JS (Bootstrap Bundle includes Popper.js) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
